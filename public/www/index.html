@@ -3,34 +3,75 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    
+
     <title>Sign-in, Then Tabs Example</title>
 
     <link href="//code.ionicframework.com/nightly/css/ionic.css" rel="stylesheet">
     <script src="//code.ionicframework.com/nightly/js/ionic.bundle.js"></script>
-    
-  
+    <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyALvisbV_FRlJTDYDJ3yNwi--FBs4zfSmc",
+        authDomain: "project-6654639009467199534.firebaseapp.com",
+        databaseURL: "https://project-6654639009467199534.firebaseio.com",
+        storageBucket: "",
+      };
+      firebase.initializeApp(config);
+    </script>
+
+
     <link href="css/style.css" rel="stylesheet">
     <script src="js/app.js"></script>
     <script src="cordova.js"></script>
   </head>
 
   <body>
-    
+
     <ion-nav-bar class="bar-positive">
       <ion-nav-back-button class="button-icon ion-arrow-left-c">
       </ion-nav-back-button>
     </ion-nav-bar>
-             
+
     <ion-nav-view></ion-nav-view>
+
+    <script id="templates/sign-up.html" type="text/ng-template">
+      <ion-view view-title="Sign-In">
+        <ion-content>
+          <div class="list">
+            <label class="item item-input">
+              <span class="input-label">Email</span>
+              <input type="text" ng-model="user.email">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Password</span>
+              <input type="password" ng-model="user.password">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Confirm Password</span>
+              <input type="password" ng-model="user.confirmPassword">
+            </label>
+          </div>
+          <div class="padding">
+            <button class="button button-block button-positive" ng-disabled="user.confirmPassword != user.password " ng-click="signUp(user)">
+              Sign-Up
+            </button>
+            <p class="text-center">
+              <a href="#/forgot-password">Forgot password</a>
+              <a href="#/sign-in">Sign-In</a>
+            </p>
+          </div>
+        </ion-content>
+      </ion-view>
+    </script>
 
     <script id="templates/sign-in.html" type="text/ng-template">
       <ion-view view-title="Sign-In">
         <ion-content>
           <div class="list">
             <label class="item item-input">
-              <span class="input-label">User Name</span>
-              <input type="text" ng-model="user.username">
+              <span class="input-label">Email</span>
+              <input type="text" ng-model="user.email">
             </label>
             <label class="item item-input">
               <span class="input-label">Password</span>
@@ -43,6 +84,7 @@
             </button>
             <p class="text-center">
               <a href="#/forgot-password">Forgot password</a>
+              <a href="#/sign-up">Sign-Up</a>
             </p>
           </div>
         </ion-content>
@@ -66,9 +108,9 @@
         </ion-content>
       </ion-view>
     </script>
-    
+
     <script id="templates/tabs.html" type="text/ng-template">
-      <ion-view>
+      <ion-view ng-controller="SignInCtrl">
         <ion-tabs class="tabs-icon-top tabs-positive">
 
           <ion-tab title="Home" icon="ion-home" href="#/tab/home">
@@ -79,7 +121,7 @@
             <ion-nav-view name="about-tab"></ion-nav-view>
           </ion-tab>
 
-          <ion-tab title="Sign-Out" icon="ion-log-out" href="#/sign-in">
+          <ion-tab title="Sign-Out" icon="ion-log-out" ng-click="signOut()">
           </ion-tab>
 
         </ion-tabs>
@@ -113,7 +155,7 @@
           </p>
         </ion-content>
       </ion-view>
-    </script> 
+    </script>
 
     <script id="templates/facts2.html" type="text/ng-template">
       <ion-view view-title="Also Factual">
