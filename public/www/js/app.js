@@ -122,6 +122,7 @@ angular.module('ionicApp', ['ionic'])
 })
   .controller('facebookCtrl', function($scope, $state) {
     var provider = new firebase.auth.FacebookAuthProvider();
+    provider.addScope('user_actions.books');
 
     $scope.fbLogin = function () {
       firebase.auth().signInWithPopup(provider).then(function(result) {
