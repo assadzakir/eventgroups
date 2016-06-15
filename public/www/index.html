@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html ng-app="ionicApp">
+<html >
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
 
     <title>Sign-in, Then Tabs Example</title>
 
-    <link href="//code.ionicframework.com/nightly/css/ionic.css" rel="stylesheet">
+    <!--<link href="//code.ionicframework.com/nightly/css/ionic.css" rel="stylesheet">-->
+    <link href="lib/ionic/css/ionic.min.css" rel="stylesheet">
     <script src="lib/ionic/js/ionic.bundle.js"></script>
     <script src="lib/firebase/firebase.js"></script>
     <script>
@@ -15,7 +16,7 @@
         apiKey: "AIzaSyALvisbV_FRlJTDYDJ3yNwi--FBs4zfSmc",
         authDomain: "project-6654639009467199534.firebaseapp.com",
         databaseURL: "https://project-6654639009467199534.firebaseio.com",
-        storageBucket: "",
+        storageBucket: ""
       };
       firebase.initializeApp(config);
     </script>
@@ -23,11 +24,12 @@
 
     <link href="css/style.css" rel="stylesheet">
     <script src="js/app.js"></script>
-    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/ng-cordova/0.1.26-alpha/ng-cordova.min.js"></script>-->
+    <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
     <script src="cordova.js"></script>
   </head>
 
-  <body>
+  <body ng-app="ionicApp">
 
     <ion-nav-bar class="bar-positive">
       <ion-nav-back-button class="button-icon ion-arrow-left-c">
@@ -200,6 +202,7 @@
         </ion-content>
       </ion-view>
     </script>
+
 
   </body>
 </html>
