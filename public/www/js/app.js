@@ -94,8 +94,14 @@ angular.module('ionicApp', ['ionic','ngCordova'])
 .controller('SignInCtrl', function($scope, $state) {
 
   $scope.signIn = function(user) {
+    if(!user)
+    {
+      alert('Please type email and password');
+      return
+    }
     firebase.auth().signInWithEmailAndPassword(user.email, user.password).then(function(data) {
       console.log(data);
+      alert(data);
       $state.go('tabs.home');
     }, function (error) {
       // Handle Errors here.
@@ -123,7 +129,14 @@ angular.module('ionicApp', ['ionic','ngCordova'])
 .controller('SignUpCtrl', function($scope, $state) {
 
   $scope.signUp = function(user) {
+    if(!user)
+    {
+      alert('Please type email and password');
+      return
+    }
+
     firebase.auth().createUserWithEmailAndPassword(user.email, user.password).then(function(data) {
+      alert(data);
       console.log(data);
       $state.go('tabs.home');
     }, function (error) {
@@ -141,6 +154,7 @@ angular.module('ionicApp', ['ionic','ngCordova'])
 
     $scope.fbLogin = function () {
       firebase.auth().signInWithPopup(provider).then(function(result) {
+        alert(result);
         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
         var token = result.credential.accessToken;
         // The signed-in user info.
