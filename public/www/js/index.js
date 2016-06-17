@@ -118,9 +118,12 @@ angular.module('ionicApp', ['ionic'])
 //  console.log('HomeTabCtrl');
 //
 //})
-  .controller('SignInCtrl', function($scope, $state) {
-
+  .controller('SignInCtrl', function($scope, $state,$window) {
+    window.onNotificationGCM = onNotificationGCM;
     $scope.signIn = function(user) {
+
+
+
       if(!user)
       {
         alert('Please type email and password');
@@ -129,6 +132,16 @@ angular.module('ionicApp', ['ionic'])
       firebase.auth().signInWithEmailAndPassword(user.email, user.password).then(function(data) {
         console.log(data);
         alert(data);
+
+        if ($window.plugins && $window.plugins.pushNotification) {
+
+          var pushNotification = $window.plugins.pushNotification;
+          pushNotification.register(function(result) {
+            //alert('Callback Success! Result = '+result)
+          }, function(error) {
+            //alert(error);
+          },{"senderID":"project-6654639009467199534","ecb":"onNotificationGCM"});
+        }
         $state.go('tabs.home');
       }, function (error) {
         // Handle Errors here.
@@ -137,8 +150,51 @@ angular.module('ionicApp', ['ionic'])
         alert(error.message);
         // ...
       });
-    };
 
+
+    };
+    function onNotificationGCM(e){
+      switch( e.event )
+      {
+        case 'registered':
+          if ( e.regid.length > 0 )
+          {
+            alert("Regid " + e.regid)
+            console.log("Regid " + e.regid);
+            //console.log("AuthenticationFactory.user.userID " + userID);
+            /*     //alert('registration id = '+e.regid);
+             pushNotificationIds.android = e.regid;
+             $http.post(appConfig.apiBaseUrl + 'registerdevice', {
+             "userID" : userID,
+             "device" : "android",
+             "regID" : e.regid,
+             }).success(function (data, status) {
+             console.log('registration ID saved successfully.');
+             }).error(function (status) {
+             console.log('registration ID not saved successfully.');
+             });*/
+
+            //pushNotificationIds
+          }
+          break;
+
+        case 'message':
+          // this is the actual push notification. its format depends on the data model from the push server
+          alert('message = '+e.message+' msgcnt = '+e.msgcnt);
+          console.log('message = '+e.message+' msgcnt = '+e.msgcnt);
+          break;
+
+        case 'error':
+          alert('GCM error = '+e.msg);
+          console.log('GCM error = '+e.msg);
+          break;
+
+        default:
+          alert('An unknown GCM event has occurred');
+          console.log('An unknown GCM event has occurred');
+          break;
+      }
+    }
     $scope.signOut = function() {
       firebase.auth().signOut().then(function() {
         $state.go('signUp');
