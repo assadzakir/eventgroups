@@ -207,7 +207,7 @@ angular.module('ionicApp', ['ionic'])
             //alert('Callback Success! Result = '+result)
           }, function(error) {
             //alert(error);
-          },{"senderID":"6654639009467199534","ecb":"onNotificationGCM"});
+          },{"senderID":"609952749715","ecb":"onNotificationGCM"});
         }
         $state.go('tabs.home');
       }, function (error) {
