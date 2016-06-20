@@ -1,5 +1,9 @@
 var express = require('express'),
     app = express();
+var firebase = require("firebase");
+var notification = require('./notificationService');
+var credentials = require('./credentials.js');
+
 
 app.use(express.static('public/www'));
 
@@ -10,8 +14,25 @@ app.all('*', function(req, res, next) {
     next();
 });
 
+firebase.initializeApp({
+    serviceAccount: {
+        projectId: credentials.firebaseJson.project_id,
+        clientEmail: credentials.firebaseJson.client_email,
+        privateKey: credentials.firebaseJson.private_key
+    },
+    databaseURL: credentials.firebase.databaseURL
+});
+
 // API Routes
-// app.get('/blah', routeHandler);
+app.get('/register', function(req, res){
+    notification.register(req,res)
+});
+app.get('/unRegister', function(req, res){
+    notification.unRegister(req,res)
+});
+app.get('/sendPushNotification', function(req, res){
+    notification.sendPushNotification(req,res)
+});
 
 app.set('port', process.env.PORT || 5000);
 
