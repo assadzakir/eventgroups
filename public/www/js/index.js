@@ -2,16 +2,6 @@ angular.module('ionicApp', ['ionic','ngCordova'])
 
 
   .run(function($ionicPlatform,$cordovaPush,$rootScope) {
-
-    var androidConfig = {
-      "senderID": "609952749715",
-    };
-
-
-
-
-
-
       $ionicPlatform.ready(function () {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -23,36 +13,35 @@ angular.module('ionicApp', ['ionic','ngCordova'])
           StatusBar.styleDefault();
         }
 
-        $cordovaPush.register(androidConfig).then(function(result) {
-          // Success
-          alert(result)
-        }, function(err) {
-          alert(err)
-          // Error
-        })
-
-        $rootScope.$on('$cordovaPush:notificationReceived', function(event, notification) {
-          switch(notification.event) {
-            case 'registered':
-              if (notification.regid.length > 0 ) {
-                alert('registration ID = ' + notification.regid);
-              }
-              break;
-
-            case 'message':
-              // this is the actual push notification. its format depends on the data model from the push server
-              alert('message = ' + notification.message + ' msgCount = ' + notification.msgcnt);
-              break;
-
-            case 'error':
-              alert('GCM error = ' + notification.msg);
-              break;
-
-            default:
-              alert('An unknown GCM event has occurred');
-              break;
-          }
-        });
+        //$cordovaPush.register(androidConfig).then(function(result) {
+        //  // Success
+        //  alert(result)
+        //}, function(err) {
+        //  alert(err)
+        //  // Error
+        //})
+        //$rootScope.$on('$cordovaPush:notificationReceived', function(event, notification) {
+        //  switch(notification.event) {
+        //    case 'registered':
+        //      if (notification.regid.length > 0 ) {
+        //        alert('registration ID = ' + notification.regid);
+        //      }
+        //      break;
+        //
+        //    case 'message':
+        //      // this is the actual push notification. its format depends on the data model from the push server
+        //      alert('message = ' + notification.message + ' msgCount = ' + notification.msgcnt);
+        //      break;
+        //
+        //    case 'error':
+        //      alert('GCM error = ' + notification.msg);
+        //      break;
+        //
+        //    default:
+        //      alert('An unknown GCM event has occurred');
+        //      break;
+        //  }
+        //});
       });
 
 
@@ -182,12 +171,45 @@ angular.module('ionicApp', ['ionic','ngCordova'])
 //  console.log('HomeTabCtrl');
 //
 //})
-  .controller('SignInCtrl', function($scope, $state,$window) {
+  .controller('SignInCtrl', function($scope,$rootScope, $state,$window,$cordovaPush,$http) {
+
+    $rootScope.$on('$cordovaPush:notificationReceived', function(event, notification) {
+      switch(notification.event) {
+        case 'registered':
+          if (notification.regid.length > 0 ) {
+            alert('registration ID = ' + notification.regid);
+            $http.post('' + 'registerdevice', {
+              "userID" : userID,
+              "device" : "android",
+              "regID" : e.regid,
+            }).success(function (data, status) {
+              console.log('registration ID saved successfully.');
+            }).error(function (status) {
+              console.log('registration ID not saved successfully.');
+            });
+          }
+          break;
+
+        case 'message':
+          // this is the actual push notification. its format depends on the data model from the push server
+          alert('message = ' + notification.message + ' msgCount = ' + notification.msgcnt);
+          break;
+
+        case 'error':
+          alert('GCM error = ' + notification.msg);
+          break;
+
+        default:
+          alert('An unknown GCM event has occurred');
+          break;
+      }
+    });
+
+    var androidConfig = {
+      "senderID": "609952749715"
+    };
     //window.onNotificationGCM = onNotificationGCM;
     $scope.signIn = function(user) {
-
-
-
       if(!user)
       {
         alert('Please type email and password');
@@ -196,6 +218,13 @@ angular.module('ionicApp', ['ionic','ngCordova'])
       firebase.auth().signInWithEmailAndPassword(user.email, user.password).then(function(data) {
         console.log(data);
         alert(data);
+        $cordovaPush.register(androidConfig).then(function(result) {
+          // Success
+          alert(result)
+        }, function(err) {
+          alert(err);
+          // Error
+        });
 
     /*    if ($window.plugins && $window.plugins.pushNotification) {
 
@@ -320,7 +349,6 @@ angular.module('ionicApp', ['ionic','ngCordova'])
       });
 */
       firebase.auth().signInWithRedirect(provider).then(function(result) {
-        debugger;
         if (result.credential) {
           // This gives you a Facebook Access Token. You can use it to access the Facebook API.
           var token = result.credential.accessToken;
