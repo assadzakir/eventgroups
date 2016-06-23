@@ -114,16 +114,7 @@ angular.module('ionicApp', ['ionic','ngCordova'])
             templateUrl: 'templates/nav-stack.html'
           }
         }
-      })/*
-     .state('tabs.contact', {
-     url: '/contact',
-     views: {
-     'contact-tab': {
-     templateUrl: 'templates/contact.html'
-     }
-     }
-     });*/
-
+      })
     $urlRouterProvider.otherwise('/sign-up');
 
   })
