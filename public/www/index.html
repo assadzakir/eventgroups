@@ -45,7 +45,7 @@
       };
       firebase.initializeApp(config);
     </script>
-	
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-cordova/0.1.26-alpha/ng-cordova.js"></script>
     <script src="cordova.js"></script>
   </head>
@@ -141,11 +141,11 @@
           <div class="list">
             <label class="item item-input">
               <span class="input-label">Email</span>
-              <input type="text" ng-model="user.email">
+              <input type="text" ng-model="user.email" >
             </label>
             <label class="item item-input">
               <span class="input-label">Password</span>
-              <input type="password" ng-model="user.password">
+              <input type="password" ng-model="user.password" >
             </label>
           </div>
           <div class="padding">
@@ -180,7 +180,7 @@
     </script>
 
     <script id="templates/tabs.html" type="text/ng-template">
-      <ion-view ng-controller="SignInCtrl">
+      <ion-view>
         <ion-tabs class="tabs-icon-top tabs-positive">
 
           <ion-tab title="Home" icon="ion-home" href="#/tab/home">
@@ -199,7 +199,7 @@
     </script>
 
     <script id="templates/home.html" type="text/ng-template">
-      <ion-view view-title="Home" ng-controller="SignInCtrl">
+      <ion-view view-title="Home">
         <ion-content padding="true">
           <p>Example of Ionic tabs. Navigate to each tab, and
             navigate to child views of each tab and notice how

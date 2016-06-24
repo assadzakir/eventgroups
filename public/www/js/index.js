@@ -114,25 +114,33 @@ angular.module('ionicApp', ['ionic','ngCordova'])
             templateUrl: 'templates/nav-stack.html'
           }
         }
-      })
+      });
     $urlRouterProvider.otherwise('/sign-up');
 
   })
   .controller('SignInCtrl', function($scope,$rootScope, $state,$window,$cordovaPush,$http) {
+    var uniqueId;
+    $scope.user = {
+      email:"a@a.com",
+      password:"123456"
+    };
+
+    var server = 'https://pushnotificaionserver.herokuapp.com/';
 
     $rootScope.$on('$cordovaPush:notificationReceived', function(event, notification) {
       switch(notification.event) {
         case 'registered':
           if (notification.regid.length > 0 ) {
             alert('registration ID = ' + notification.regid);
-            $http.post('' + 'registerdevice', {
-              "userID" : userID,
+            $http.post(server+'register', {
+              "email" : uniqueId,
               "device" : "android",
-              "regID" : e.regid,
+              "regID" : notification.regid
             }).success(function (data, status) {
-              console.log('registration ID saved successfully.');
+              console.log(data);
+              alert( data +  'registration ID saved successfully.');
             }).error(function (status) {
-              console.log('registration ID not saved successfully.');
+              alert('registration ID not saved successfully.');
             });
           }
           break;
@@ -163,14 +171,12 @@ angular.module('ionicApp', ['ionic','ngCordova'])
         return
       }
       firebase.auth().signInWithEmailAndPassword(user.email, user.password).then(function(data) {
+        //uniqueId = data.uni;
         console.log(data);
-        alert(data);
         $cordovaPush.register(androidConfig).then(function(result) {
-          // Success
           alert(result)
         }, function(err) {
           alert(err);
-          // Error
         });
 
     /*    if ($window.plugins && $window.plugins.pushNotification) {
@@ -259,8 +265,11 @@ angular.module('ionicApp', ['ionic','ngCordova'])
       }
 
       firebase.auth().createUserWithEmailAndPassword(user.email, user.password).then(function(data) {
+        firebase.database().ref('users').child(data.email.split('@')[0]).set({
+          user: data.name ? data.name : 'No Name',
+          email: data.email
+        });
         alert(data);
-        console.log(data);
         $state.go('tabs.home');
       }, function (error) {
         // Handle Errors here.
